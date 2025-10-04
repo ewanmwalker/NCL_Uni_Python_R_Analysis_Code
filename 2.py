@@ -1,37 +1,46 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Oct 14 14:19:34 2022
+Created on Mon Jan  9 10:13:48 2023
 
 @author: Super Warrior
 """
-
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.optimize as opt
+from scipy import sparse
+import scipy.linalg as sla
 
-x = np.arange(0,13)
-y = np.array([ 0.9, 0.9, 2.3, 4.1, 5.3, 7.1, 8, 8.1, 8.3, 10.1, 11.7, 13.6, 14.4 ])
+A = np.array([[3,0,4],
+              [1,3,1],
+              [9,0,4]])
 
-x1 = np.linspace(0,12,100)
+b = np.array([3,4,4])
 
-p = np.polyfit(x,y,1)
-f = p[0]*x1 + p[1]
+x = sla.inv(A) * b
 
-S = sum( (f - y)**2 )
+#c
+y = sparse.diags([-1,range(1,16),0,1],[-1,0,1,2],[15,15]).toarray()
 
-y1 = p[0]*x1 + p[1]
+#print(neighbouring(y,1,1))
 
-def gfunc(x,a,b,c):
-    return a*x + b + np.sin(c*x)
+#d
+def neighbouring(A,i,j):
+    
+    if i == 0:
+        A = np.roll(A,1,axis=0)
+        i = i + 1
+    
+    if i == A.shape[0]:
+        A = np.roll(A,-1,axis=0)
+        i = i - 1
+    
+    if j == 0:
+        A = np.roll(A,1,axis=1)
+        j = j + 1 
+        
+    if j == A.shape[1]:
+        A = np.roll(A,-1,axis=1)
+        j = j - 1
+    
+    return A[i-1:i+2,j-1:j+2]
 
-popt, pcov = opt.curve_fit(gfunc, x, y)
-g1 = gfunc(x1,popt[0],popt[1],popt[2])
-
-plt.plot(x,y,'x')
-plt.plot(x1,y1)
-plt.plot(x1,g1)
-
-plt.xlabel("x")
-plt.ylabel('y')
-plt.legend(["Data points","f(x)","g(x)"])
-plt.title("A plot of 2 different fitting models to given data")
+print(neighbouring(y,0,0))

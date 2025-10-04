@@ -1,32 +1,33 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Oct 14 14:38:00 2022
+Created on Mon Jan  9 10:49:20 2023
 
 @author: Super Warrior
 """
-
 import numpy as np
+from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 
-x = np.linspace(-40,40,300)
+def model(y,t):
+    x, u = y
+    
+    dxdt = u
+    dudt = -3/2 * np.sin(x)
+    
+    return [dxdt , dudt]
 
-y = ((5 * np.sin(x) ) / x ) - 2
+t = np.linspace(0,25,250)
 
-yl = 0*x - 2
+y = odeint(model,[2.75,0],t)
 
-plt.plot(x,y)
-plt.plot(x,yl)
+y1 = y[:,0]
+#y2 = y[:,1]
 
-plt.xlabel("x")
-plt.ylabel("y(x)")
-plt.title("A plot of y(x) versus x with a line at y=-2")
+#plt.plot(t,y1)
+plt.xlabel("t")
+plt.ylabel("x(t)")
+plt.title("Plot of x(t) vs t for the model, 0<=t<=25")
 
-print(min(y))
+x = y[:,0] + 2.75
 
-A = []
-
-for n in range(0,299):
-    if y[n] < -2:
-        A.append(y[n])
-        
-print(len(A))
+plt.plot(t,y[:,0])
