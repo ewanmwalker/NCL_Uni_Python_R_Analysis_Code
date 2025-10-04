@@ -1,27 +1,30 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sat Jan  7 19:39:49 2023
-
-@author: Super Warrior
+A surface plot
 """
+import matplotlib.pyplot as plt
 import numpy as np
-import scipy.linalg as sla
 
-A = np.array([[2,8,6,7],
-              [4,9,8,6],
-              [1,6,4,2],
-              [6,0,1,2]])
+# new figure
+fig = plt.figure(figsize=(15,10))
+plt.rcParams['font.size'] = 20
 
-eigenvalues, eigenvectors = sla.eig(A)
+# 3d axes
+ax = plt.axes(projection='3d')
 
-print(eigenvalues)
+# Create a meshgrid
+x = np.linspace(-4, 4, 25)
+y = np.linspace(-4, 4, 25)
+X, Y = np.meshgrid(x, y)
 
-#b
+Z = -pow(X,2) + Y/2
 
-S = A @ A.T
+# Plot the surface.
+surf = ax.plot_surface(X, Y, Z, cmap='seismic')
 
-#c
+# Add a colorbar
+fig.colorbar(surf, shrink=0.5)
 
-values_S , vectors_S = sla.eig(S)
-print(values_S)
-print(vectors_S)
+# Axis labels - note applied to the axes in a 3D plot
+ax.set_xlabel('x',labelpad=10)
+ax.set_ylabel('y', labelpad=10)
+ax.set_zlabel('f(x,y)', labelpad=10)
