@@ -1,32 +1,28 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan  5 12:01:40 2023
+Created on Thu Jan  5 14:16:06 2023
 
 @author: Super Warrior
 """
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.integrate import odeint
 
-# Initial y
-y0 = 1
+def euler(f,y0,t):
+    """
+    Returns the solution y(t) for an initial value problem
+    dy/dt = f(y,t)
+    for an array t and initial value y0
+    """
 
-# t array
+    y = np.zeros(len(t))   
+    y[0] = y0            
+
+    for n in range(0,len(t)-1):
+        y[n+1] = y[n] + f(y[n],t[n])*(t[n+1]-t[n])
+
+    return y
+
 t = np.linspace(0,20,100)
-
-# Parameter b
-b = 2
-def rhs(y,t,b):
-    dydt = b / y
-    return dydt
-
-y = odeint(rhs,y0,t,args=(b,))
-
-legend = np.zeros(5)
-
-for b in range(1,5):
-    y = odeint(rhs,y0,t,args=(b,))
-    plt.plot(t,y,label='dy/dt = {} /y'.format(b))
-    
-plt.legend()
-    
+y0 = 1
+y = euler(lambda y,t: -y*np.cos(t), y0, t)
+plt.plot(t,y)

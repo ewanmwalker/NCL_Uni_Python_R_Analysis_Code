@@ -1,37 +1,30 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan  5 12:34:27 2023
+Created on Thu Jan  5 14:25:05 2023
 
 @author: Super Warrior
 """
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.integrate import odeint
 
-def model(y, t, b, c):
-    S, I, R = y            
-    dSdt = -b*I*S
-    dIdt = b*I*S - c*I  
-    dRdt = c*I
-    
-    return [dSdt, dIdt, dRdt]
-
-# Parameters
-b = 0.002
-c = 0.5
+# Initialise arrays
+t = np.linspace(0,40,1600)
+x = np.zeros(len(t))
+y = np.zeros(len(t))
 
 # Initial conditions
-y0 = [999,1,0]
+x[0] = 1
+y[0] = 1
 
-# Time points
-t = np.linspace(0,20,100)
+# Parameters
+a = 2/3
+b = 4/3
+c = 1
+d = 1
 
-# Solve ODE
-y = odeint(model,y0,t,args=(b,c))
-
-plt.plot(t,y[:,0],label='S(t)')   # y[:,0] contains S(t)
-plt.plot(t,y[:,1],label='I(t)')   # y[:,1] contains I(t)
-plt.plot(t,y[:,2],label='R(t)')   # y[:,1] contains I(t)
-plt.legend()
-plt.xlabel('t')
-plt.title('SIR Model')
+for n in range(len(t)-1):
+    x[n+1] = x[n] + (t[n+1]-t[n]) * (a*x[n] - b*x[n]*y[n])
+    y[n+1] = y[n] + (t[n+1]-t[n]) * (c*x[n]*y[n] - d*y[n])
+    
+plt.plot(t,x,'-')
+plt.plot(t,y,'-')
