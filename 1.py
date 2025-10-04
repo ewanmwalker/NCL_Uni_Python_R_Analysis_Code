@@ -1,24 +1,37 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan  5 14:03:32 2023
+Created on Fri Jan  6 19:33:15 2023
 
 @author: Super Warrior
 """
+import ode_methods as ode
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Change t to adjust the accuracy
-t = np.linspace(0,5,50)
-y = np.zeros(len(t))
-h = t[1]-t[0]
+# Function for RHS
+def rhs(y,t):
+    return -y/2
 
-y[0] = 3
+# t array
+t = np.arange(0,6,1)
 
-for n in range(len(t)-1):
-    y[n+1] = y[n] + h * (y[n])
+# Initial y
+y0 = 5
 
-plt.plot(t,y,'-o')
+# Solve
+y_euler = ode.euler(rhs,y0,t)
+y_rk4 = ode.rk4(rhs,y0,t)
+y_midpoint = ode.midpoint(rhs,y0,t)
 
-t1 = np.linspace(0,5,100)
-plt.plot(t1,3*np.exp(t1))
-plt.legend(['Euler Method','Exact solution'])
+# Plot methods
+plt.plot(t,y_euler,"-o",label="Euler")
+plt.plot(t,y_midpoint,"-o",label="Midpoint")
+plt.plot(t,y_rk4,"-o",label="RK4")
+
+# Plot exact
+tt = np.linspace(0,5,100)
+plt.plot(tt,5*np.exp(-tt/2),label="Exact")
+
+plt.xlabel("t")
+plt.ylabel("y(t)")
+plt.legend()
