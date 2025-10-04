@@ -1,6 +1,16 @@
-x = rbeta(1e6, 9, 6)
-y = rnorm(1e6, mean = 0, sd = 3*x+1/2)
+LN = function(N, mu, sigma){
+  return(exp(rnorm(N , mean = mu, sd = sigma ) ))
+  
+}
 
-z = c(x,y)
+sigma = 2
+mu = seq(0,5,0.01)
+y = rep(0,length(mu))
+N = 1000
 
-length(z[2*x+3*y>3])/1e6
+for(i in 1:length(mu)){
+  y[i] = log( mean( LN(N, mu[i], sigma)))
+}
+
+plot(mu,y, xlab="Mean / μ", ylab="Log of sample mean", pch="X")
+
