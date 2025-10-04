@@ -1,30 +1,32 @@
+# -*- coding: utf-8 -*-
 """
-A surface plot
+Created on Thu Jan  5 12:01:40 2023
+
+@author: Super Warrior
 """
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
 
-# new figure
-fig = plt.figure(figsize=(15,10))
-plt.rcParams['font.size'] = 20
+# Initial y
+y0 = 1
 
-# 3d axes
-ax = plt.axes(projection='3d')
+# t array
+t = np.linspace(0,20,100)
 
-# Create a meshgrid
-x = np.linspace(-4, 4, 25)
-y = np.linspace(-4, 4, 25)
-X, Y = np.meshgrid(x, y)
+# Parameter b
+b = 2
+def rhs(y,t,b):
+    dydt = b / y
+    return dydt
 
-Z = -pow(X,2) + Y/2
+y = odeint(rhs,y0,t,args=(b,))
 
-# Plot the surface.
-surf = ax.plot_surface(X, Y, Z, cmap='seismic')
+legend = np.zeros(5)
 
-# Add a colorbar
-fig.colorbar(surf, shrink=0.5)
-
-# Axis labels - note applied to the axes in a 3D plot
-ax.set_xlabel('x',labelpad=10)
-ax.set_ylabel('y', labelpad=10)
-ax.set_zlabel('f(x,y)', labelpad=10)
+for b in range(1,5):
+    y = odeint(rhs,y0,t,args=(b,))
+    plt.plot(t,y,label='dy/dt = {} /y'.format(b))
+    
+plt.legend()
+    

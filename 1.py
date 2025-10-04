@@ -1,17 +1,32 @@
 # -*- coding: utf-8 -*-
 """
-Week 6 Handout e1
+Created on Thu Jan  5 11:35:51 2023
 
+@author: Super Warrior
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.integrate import odeint
 
-x = np.arange(-np.pi, np.pi, 0.5)
-y = np.arange(-np.pi, np.pi, 0.5)
+# function on the rhs of dy/dt
+def rhs(y,t):
+    dydt = np.sin(t) / y
+    return dydt
 
-X,Y = np.meshgrid(x, y)
+# initial condition
+y0 = 1
 
-U = Y * np.cos(X)
-V = Y * np.sin(X)
+# t array
+t = np.linspace(0,20,200)
 
-plt.quiver(X,Y,U,V)
+# solve ODE
+y = odeint(rhs,y0,t)
+
+# plot results
+plt.plot(t,y)
+plt.xlabel('t')
+plt.ylabel('y(t)')
+
+t1 = np.linspace(0,20,200)
+plt.plot(t1, np.sqrt(3 - 2*np.cos(t)),'--')
